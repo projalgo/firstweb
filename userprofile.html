@@ -1,0 +1,209 @@
+<html>
+
+<head>
+    <title>Splitewise Profile</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            background-color: #caf0f8;
+            font-size: 24px;
+        }
+
+        header {
+            background-color: #0a2351;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            color: #eec008;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .profile-section {
+            display: flex;
+            justify-content: flex-start;
+            /* Updated */
+            align-items: center;
+            flex-direction: row;
+            /* Updated */
+        }
+
+        .profile-picture {
+            display: flex;
+            justify-content: flex-start;
+            /* Updated */
+            align-items: center;
+            /* Updated */
+            color: #eec008;
+            margin-left: 20px;
+            /* Added */
+        }
+
+        .profile-picture img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .profile-info {
+            margin-top: 20px;
+            text-align: center;
+            color: #eec008;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            padding: 5px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #0a2351;
+            font-size: 18px;
+        }
+
+        .save-button {
+            background-color: #0a2351;
+            color: #eec008;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        footer {
+            background-color: #0a2351;
+            padding: 10px;
+            text-align: center;
+            color: #eec008;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Splitewise Profile</h1>
+    </header>
+    <main>
+        <section class="profile-section">
+            <div class="profile-info">
+                <h2>Profile Information</h2>
+                <form>
+                    <label for="profile-image">Profile Image:</label>
+                    <input type="file" id="profile-image" name="profile-image" accept="image/*">
+
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                    <label for="location">Location:</label>
+                    <input type="text" id="location" name="location" required>
+                    <label for="date-of-birth">Date Of Birth:</label>
+                    <textarea id="date-of-birth" name="date-of-birth" required></textarea>
+                    <button type="submit" class="save-button">Save</button>
+                </form>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Splitewise. All rights reserved.</p>
+    </footer>
+    <script>
+        // Get the form element
+        const form = document.querySelector('form');
+
+        // Add event listener to the form submission
+        form.addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the form from submitting
+
+            // Get the entered values
+            // Get the profile image input element
+            const profileImageInput = document.getElementById('profile-image');
+
+            // Add event listener to handle file selection
+            profileImageInput.addEventListener('change', function (event) {
+                const file = event.target.files[0];
+
+                // Create a FileReader object
+                const reader = new FileReader();
+
+                // Set the onload event handler
+                reader.onload = function (e) {
+                    const previewImage = document.getElementById('preview-image');
+                    previewImage.src = e.target.result;
+                };
+
+                // Read the selected file as Data URL
+                reader.readAsDataURL(file);
+            });
+
+            // Rest of the code...
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const location = document.getElementById('location').value;
+            const dateOfBirth = document.getElementById('date-of-birth').value;
+
+            // Create an object with the user details
+            const userDetails = {
+                name: name,
+                email: email,
+                location: location,
+                dateOfBirth: dateOfBirth
+            };
+
+            // Send the data to the server
+            fetch('https://example.com/api/saveUserDetails', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userDetails)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Data saved successfully
+                        console.log('User details saved successfully.');
+                    } else {
+                        // Error occurred while saving data
+                        console.error('Failed to save user details.');
+                    }
+                })
+                .catch(error => {
+                    // Error occurred during the request
+                    console.error('An error occurred:', error);
+                });
+
+            // Reset the form
+            form.reset();
+        });
+    </script>
+</body>
+
+</html>
